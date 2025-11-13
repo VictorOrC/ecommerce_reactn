@@ -1,6 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AuthScreen } from "../../screens/Auth";
 import { scrensName } from "../../utils";
+import { HomeStack } from "../stacks";
 
 const Tab = createBottomTabNavigator();
 
@@ -9,7 +10,7 @@ export function TabNavigation() {
     <Tab.Navigator>
       <Tab.Screen
         name={scrensName.home.root}
-        component={AuthScreen}
+        component={HomeStack}
         options={{ title: "Inicio" }}
       />
       <Tab.Screen
