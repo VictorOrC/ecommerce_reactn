@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AuthScreen } from "../../screens/Auth";
 import { scrensName } from "../../utils";
-import { HomeStack } from "../stacks";
+import { HomeStack, WishlistStack } from "../stacks";
 
 const Tab = createBottomTabNavigator();
 
@@ -15,7 +15,7 @@ export function TabNavigation() {
       />
       <Tab.Screen
         name={scrensName.wishlist.root}
-        component={AuthScreen}
+        component={WishlistStack}
         options={{ title: "Lista de deseos" }}
       />
       <Tab.Screen
