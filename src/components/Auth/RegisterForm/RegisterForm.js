@@ -2,6 +2,7 @@ import { View } from "react-native";
 import { TextInput, Button } from "react-native-paper";
 import { globalStyles } from "../../../styles";
 import { useFormik } from "formik";
+import { authCtrl } from "../../../api";
 import { initialValues, validarionSchema } from "./RegisterForm.form";
 
 export function RegisterForm(props) {
@@ -12,8 +13,13 @@ export function RegisterForm(props) {
     validationSchema: validarionSchema(),
     validateOnChange: true,
     onSubmit: async (formValue) => {
-      console.log("Formulario enviar");
-      console.log(formValue);
+      try {
+        const { email, username, password } = formValue;
+        await authCtrl.register(email, username, password);
+        showLogin();
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
