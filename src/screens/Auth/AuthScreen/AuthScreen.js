@@ -11,7 +11,7 @@ import logo from "../../../../assets/logo.png";
 import { styles } from "./AuthScreen.styles";
 
 export function AuthScreen() {
-  const [showLogin, setShowLogin] = useState(false);
+  const [showLogin, setShowLogin] = useState(true);
 
   const onShowLoginRegister = () => setShowLogin((prevState) => !prevState);
 
@@ -22,7 +22,7 @@ export function AuthScreen() {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
         {showLogin ? (
-          <LoginForm />
+          <LoginForm showRegister={onShowLoginRegister} />
         ) : (
           <RegisterForm showLogin={onShowLoginRegister} />
         )}

@@ -1,15 +1,66 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { View } from "react-native";
+import { TextInput, Button } from "react-native-paper";
+import { globalStyles } from "../../../styles";
+import { useFormik } from "formik";
+import Toast from "react-native-root-toast";
+import { initialValues, validationSchema } from "./LoginForm.form";
 
-export function LoginForm() {
+export function LoginForm(props) {
+  const { showRegister } = props;
+
+  const formik = useFormik({
+    initialValues: initialValues(),
+    validationSchema: validationSchema(),
+    validateOnChange: false,
+    onSubmit: async (formValue) => {
+      try {
+        console.log(formValue);
+      } catch (error) {
+        Toast.show("Usuario o Contraseña incorrectos", {
+          position: Toast.positions.CENTER,
+        });
+      }
+    },
+  });
+
   return (
     <View>
-      <Text>LoginForm</Text>
-      <Text>LoginForm</Text>
-      <Text>LoginForm</Text>
-      <Text>LoginForm</Text>
-      <Text>LoginForm</Text>
-      <Text>LoginForm</Text>
+      <TextInput
+        label="Corero electronico"
+        style={globalStyles.form.input}
+        autoCapitalize="none"
+        onChangeText={formik.handleChange("email")}
+        onBlur={formik.handleBlur("email")}
+        value={formik.values.email}
+        error={!!(formik.touched.email && formik.errors.email)}
+      />
+      <TextInput
+        label="Contraseña"
+        style={globalStyles.form.input}
+        secureTextEntry
+        onChangeText={formik.handleChange("password")}
+        onBlur={formik.handleBlur("password")}
+        value={formik.values.password}
+        error={!!(formik.touched.password && formik.errors.password)}
+      />
+
+      <Button
+        mode="contained"
+        style={globalStyles.form.btnSubmit}
+        onPress={formik.handleSubmit}
+        loading={formik.isSubmitting}
+      >
+        Iniciar Sesion
+      </Button>
+
+      <Button
+        mode="text"
+        style={globalStyles.form.bntText}
+        labelStyle={globalStyles.form.bntTextLabel}
+        onPress={showRegister}
+      >
+        No tienes cuenta? Registrate
+      </Button>
     </View>
   );
 }

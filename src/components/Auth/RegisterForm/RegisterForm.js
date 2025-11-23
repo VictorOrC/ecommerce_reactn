@@ -3,14 +3,15 @@ import { TextInput, Button } from "react-native-paper";
 import { globalStyles } from "../../../styles";
 import { useFormik } from "formik";
 import { authCtrl } from "../../../api";
-import { initialValues, validarionSchema } from "./RegisterForm.form";
+import { initialValues, validationSchema } from "./RegisterForm.form";
+import Toast from "react-native-root-toast";
 
 export function RegisterForm(props) {
   const { showLogin } = props;
 
   const formik = useFormik({
     initialValues: initialValues(),
-    validationSchema: validarionSchema(),
+    validationSchema: validationSchema(),
     validateOnChange: true,
     onSubmit: async (formValue) => {
       try {
@@ -18,7 +19,9 @@ export function RegisterForm(props) {
         await authCtrl.register(email, username, password);
         showLogin();
       } catch (error) {
-        console.log(error);
+        Toast.show("Error al registrar el usuario", {
+          position: Toast.positions.CENTER,
+        });
       }
     },
   });
