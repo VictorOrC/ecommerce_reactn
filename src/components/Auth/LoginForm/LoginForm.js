@@ -5,9 +5,11 @@ import { useFormik } from "formik";
 import Toast from "react-native-root-toast";
 import { initialValues, validationSchema } from "./LoginForm.form";
 import { authCtrl } from "../../../api";
+import { useAuth } from "../../../hooks";
 
 export function LoginForm(props) {
   const { showRegister } = props;
+  const useAuthData = useAuth();
 
   const formik = useFormik({
     initialValues: initialValues(),
