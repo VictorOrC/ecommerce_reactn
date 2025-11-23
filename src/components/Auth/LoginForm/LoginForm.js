@@ -4,6 +4,7 @@ import { globalStyles } from "../../../styles";
 import { useFormik } from "formik";
 import Toast from "react-native-root-toast";
 import { initialValues, validationSchema } from "./LoginForm.form";
+import { authCtrl } from "../../../api";
 
 export function LoginForm(props) {
   const { showRegister } = props;
@@ -14,9 +15,12 @@ export function LoginForm(props) {
     validateOnChange: false,
     onSubmit: async (formValue) => {
       try {
-        console.log(formValue);
+        const { email, password } = formValue;
+        const response = await authCtrl.login(email, password);
+        console.log(response);
       } catch (error) {
-        Toast.show("Usuario o Contraseña incorrectos", {
+        Toast.show("ERROR ALGO SALIÓ MAL", {
+          duration: 2000,
           position: Toast.positions.CENTER,
         });
       }
