@@ -1,5 +1,5 @@
 import { useState, useEffect, createContext } from "react";
-import { storageCrtl } from "../api";
+import { storageCrtl, userCtrl } from "../api";
 
 export const AuthContext = createContext();
 
@@ -17,6 +17,8 @@ export function AuthProvider(props) {
   const login = async (token) => {
     try {
       await storageCrtl.setToken(token);
+      const response = await userCtrl.getMe();
+      console.log(response);
     } catch (error) {
       console.log(error);
     }
