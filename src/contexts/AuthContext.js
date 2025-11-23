@@ -1,35 +1,65 @@
 import { useState, useEffect, createContext } from "react";
 import { storageCrtl, userCtrl } from "../api";
+import { fn } from "../utils";
 
 export const AuthContext = createContext();
 
 export function AuthProvider(props) {
   const { children } = props;
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     recoverySession();
   }, []);
 
   const recoverySession = async () => {
     const token = await storageCrtl.getToken();
-    console.log("TOKEN --->", token);
+    if (!token) {
+      logout();
+      setLoading(false);
+      return;
+    }
+
+    if (fn.hasTokenExpired(token)) {
+      logout();
+    } else {
+      await login(token);
+    }
   };
 
   const login = async (token) => {
     try {
       await storageCrtl.setToken(token);
       const response = await userCtrl.getMe();
-      console.log(response);
+      setUser(response);
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      setLoading(false);
     }
   };
 
-  const data = {
-    user: null,
-    login,
-    logout: () => console.log("LOGOUT"),
-    updateUser: () => console.log("UPDATE_USER"),
+  const logout = async () => {
+    await storageCrtl.removeToken();
+    setUser(null);
   };
+
+  const updateUser = (key, value) => {
+    setUser({
+      ...user,
+      [key]: value,
+    });
+  };
+
+  const data = {
+    user,
+    login,
+    logout,
+    updateUser,
+  };
+
+  if (loading) return null;
 
   return <AuthContext.Provider value={data}>{children}</AuthContext.Provider>;
 }
