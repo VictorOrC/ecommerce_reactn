@@ -5,12 +5,12 @@ import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../../hooks";
 import { userCtrl } from "../../../api";
 import { globalStyles } from "../../../styles";
-import { initialValues, validationSchema } from "./ChangeNameScreen.form";
-import { styles } from "./ChangeNameScreen.style";
+import { initialValues, validationSchema } from "./ChangeEmailScreen.form";
+import { styles } from "./ChangeEmailScreen.style";
 import Toast from "react-native-root-toast";
 
 // Screen for updating the user's first and last name
-export function ChangeNameScreen() {
+export function ChangeEmailScreen() {
   // Get user data and update function from AuthContext
   const { user, updateUser } = useAuth();
 
@@ -21,7 +21,7 @@ export function ChangeNameScreen() {
   // Formik configuration for form handling and validation
   const formik = useFormik({
     // Initial values filled with the current user's data
-    initialValues: initialValues(user.firstname, user.lastname),
+    initialValues: initialValues(user.email),
 
     // Form validation rules (Yup)
     validationSchema: validationSchema(),
@@ -36,8 +36,7 @@ export function ChangeNameScreen() {
         await userCtrl.update(user.id, formValue);
 
         // Update user data in the global AuthContext state
-        updateUser("firstname", formValue.firstname);
-        updateUser("lastname", formValue.lastname);
+        updateUser("email", formValue.email);
 
         // Navigate back to the previous screen
         navigation.goBack();
@@ -54,19 +53,11 @@ export function ChangeNameScreen() {
     <View style={styles.container}>
       {/* First name input */}
       <TextInput
-        label="Nombre"
+        label="Correo Electronico"
         style={globalStyles.form.input}
-        onChangeText={(text) => formik.setFieldValue("firstname", text)}
-        value={formik.values.firstname}
-        error={formik.errors.firstname}
-      />
-      {/* Last name input */}
-      <TextInput
-        label="Apellido"
-        style={globalStyles.form.input}
-        onChangeText={(text) => formik.setFieldValue("lastname", text)}
-        value={formik.values.lastname}
-        error={formik.errors.lastname}
+        onChangeText={(text) => formik.setFieldValue("email", text)}
+        value={formik.values.email}
+        error={formik.errors.email}
       />
       {/* Submit button */}
       <Button
@@ -75,7 +66,7 @@ export function ChangeNameScreen() {
         onPress={formik.handleSubmit}
         loading={formik.isSubmitting}
       >
-        Cambiar nombre y apellidos
+        Cambiar correo electronico
       </Button>
     </View>
   );
