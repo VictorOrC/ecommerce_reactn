@@ -2,7 +2,7 @@ export * from "./AccountScreen";
 export * from "./AddEditAddressesScreen";
 export * from "./AddressesScreen";
 export * from "./ChangeEmailScreen";
-export * from "./ChangeNameScreen";
+export * from "./ChangeNameScreen/ChangeNameScreen";
 export * from "./ChangePasswordScreen";
 export * from "./ChangeUserName";
 export * from "./OrderScreen";

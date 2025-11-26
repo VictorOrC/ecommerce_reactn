@@ -1,15 +1,30 @@
-import { View, Text } from "react-native";
+import { Alert } from "react-native";
 import { List } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { map } from "lodash";
+import { useAuth } from "../../../hooks";
 import { accountMenu, appMenu } from "./Menu.data";
 import { styles } from "./Menu.styles";
 
 export function Menu() {
   const navigation = useNavigation();
+  const { logout } = useAuth();
 
   const alertLogout = () => {
-    console.log("Cerrar sesion");
+    Alert.alert(
+      "Cerrar sesion",
+      "¿Estas seguro de que quieres salir de la cuenta?",
+      [
+        {
+          text: "NO",
+        },
+        {
+          text: "SI",
+          onPress: logout,
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   return (

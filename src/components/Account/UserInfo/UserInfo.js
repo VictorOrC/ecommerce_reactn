@@ -9,7 +9,7 @@ export function UserInfo() {
     <View style={styles.container}>
       <Text style={styles.title}>Bienvenido</Text>
       <Text style={styles.name}>
-        {user.firstname & user.lastname
+        {user.firstname && user.lastname
           ? `${user.firstname} ${user.lastname}`
           : user.email}
       </Text>
