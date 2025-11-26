@@ -9,7 +9,7 @@ export function initialValues(firstname, lastname) {
 
 export function validationSchema() {
   return Yup.object({
-    firstname: Yup.string().required(true),
-    lastname: Yup.string().required(true),
+    firstname: Yup.string().min(3, true).max(30, true).required(true),
+    lastname: Yup.string().min(3, true).max(30, true).required(true),
   });
 }
