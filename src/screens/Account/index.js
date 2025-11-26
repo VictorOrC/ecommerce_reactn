@@ -3,7 +3,7 @@ export * from "./AddEditAddressesScreen";
 export * from "./AddressesScreen";
 export * from "./ChangeEmailScreen/ChangeEmailScreen";
 export * from "./ChangeNameScreen/ChangeNameScreen";
-export * from "./ChangePasswordScreen";
+export * from "./ChangePasswordScreen/ChangePasswordScreen";
 export * from "./ChangeUserName/ChangeUserName";
 export * from "./OrderScreen";
 export * from "./OrdersScreen";
