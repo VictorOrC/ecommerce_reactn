@@ -8,6 +8,7 @@ export const ENV = {
     USERS: "users",
     ADDRESSES: "addresses",
     HOME_BANNERS: "home-banners",
+    PRODUCTS: "products",
   },
   STORAGE: {
     TOKEN: "token",
