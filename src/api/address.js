@@ -62,7 +62,47 @@ async function createAddress(userId, data) {
   }
 }
 
+async function getAddressById(addressId) {
+  try {
+    const url = `${ENV.API_URL}/${ENV.ENDPOINT.ADDRESSES}/${addressId}`;
+    console.log(url);
+
+    const response = await authFetch(url);
+
+    if (!response || !response.ok) throw response;
+
+    const result = await response.json();
+
+    return { ...result.data };
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function updateAddress(addressId, data) {
+  try {
+    const url = `${ENV.API_URL}/${ENV.ENDPOINT.ADDRESSES}/${addressId}`;
+    const params = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ data }),
+    };
+
+    const response = await authFetch(url, params);
+
+    if (!response || !response.ok) throw response;
+
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const addressCtrl = {
   getAll: getAllAddresses,
+  get: getAddressById,
   create: createAddress,
+  update: updateAddress,
 };

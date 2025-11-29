@@ -11,13 +11,28 @@ import { initialValues, validationSchema } from "./AddEditAddressesScreen.form";
 import { globalStyles } from "../../../styles";
 import { styles } from "./AddEditAddressesScreen.styles";
 
-export function AddEditAddressesScreen() {
+export function AddEditAddressesScreen(props) {
+  const {
+    route: { params },
+  } = props;
   const navigation = useNavigation();
   const { user } = useAuth();
+  const addressId = params?.addressId;
+  const documentId = params?.documentId;
 
   useEffect(() => {
-    navigation.setOptions({ title: "Crear direccion" });
+    if (addressId) {
+      navigation.setOptions({ title: "Editar direccion" });
+    } else {
+      navigation.setOptions({ title: "Crear direccion" });
+    }
   }, []);
+
+  useEffect(() => {
+    if (addressId) {
+      retriveAddress();
+    }
+  }, [addressId]);
 
   const formik = useFormik({
     initialValues: initialValues(),
@@ -25,7 +40,11 @@ export function AddEditAddressesScreen() {
     validateOnChange: false,
     onSubmit: async (formValue) => {
       try {
-        await addressCtrl.create(user.id, formValue);
+        if (addressId) {
+          await addressCtrl.update(documentId, formValue);
+        } else {
+          await addressCtrl.create(user.id, formValue);
+        }
 
         navigation.goBack();
       } catch (error) {
@@ -35,6 +54,18 @@ export function AddEditAddressesScreen() {
       }
     },
   });
+
+  const retriveAddress = async () => {
+    const response = await addressCtrl.get(documentId);
+    await formik.setFieldValue("title", response.title);
+    await formik.setFieldValue("name", response.name);
+    await formik.setFieldValue("address", response.address);
+    await formik.setFieldValue("postal_code", response.postal_code);
+    await formik.setFieldValue("city", response.city);
+    await formik.setFieldValue("state", response.state);
+    await formik.setFieldValue("country", response.country);
+    await formik.setFieldValue("phone", response.phone);
+  };
 
   return (
     <KeyboardAwareScrollView
@@ -112,7 +143,7 @@ export function AddEditAddressesScreen() {
           onPress={formik.handleSubmit}
           loading={formik.isSubmitting}
         >
-          Crear direccion
+          {addressId ? "Actualizar direccion" : "Crear direccion"}
         </Button>
       </View>
     </KeyboardAwareScrollView>
