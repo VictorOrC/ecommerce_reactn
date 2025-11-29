@@ -1,0 +1,120 @@
+import { useEffect } from "react";
+import { View, Text } from "react-native";
+import { TextInput, Button } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+import { useFormik } from "formik";
+import Toast from "react-native-root-toast";
+import { addressCtrl } from "../../../api";
+import { useAuth } from "../../../hooks";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { initialValues, validationSchema } from "./AddEditAddressesScreen.form";
+import { globalStyles } from "../../../styles";
+import { styles } from "./AddEditAddressesScreen.styles";
+
+export function AddEditAddressesScreen() {
+  const navigation = useNavigation();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    navigation.setOptions({ title: "Crear direccion" });
+  }, []);
+
+  const formik = useFormik({
+    initialValues: initialValues(),
+    validationSchema: validationSchema(),
+    validateOnChange: false,
+    onSubmit: async (formValue) => {
+      try {
+        await addressCtrl.create(user.id, formValue);
+
+        navigation.goBack();
+      } catch (error) {
+        Toast.show("Error al crear o editar direccion", {
+          position: Toast.positions.CENTER,
+        });
+      }
+    },
+  });
+
+  return (
+    <KeyboardAwareScrollView
+      style={{ flex: 1 }}
+      contentContainerStyle={{
+        flexGrow: 1,
+        paddingHorizontal: 20,
+        paddingVertical: 20,
+      }}
+      enableOnAndroid
+      keyboardShouldPersistTaps="handled"
+      extraScrollHeight={180} // <- súbelo bastante
+    >
+      <View style={styles.container}>
+        <TextInput
+          label="Titulo"
+          style={globalStyles.form.input}
+          onChangeText={(text) => formik.setFieldValue("title", text)}
+          value={formik.values.title}
+          error={formik.errors.title}
+        />
+        <TextInput
+          label="Nombre y apellido"
+          style={globalStyles.form.input}
+          onChangeText={(text) => formik.setFieldValue("name", text)}
+          value={formik.values.name}
+          error={formik.errors.name}
+        />
+        <TextInput
+          label="Direccion"
+          style={globalStyles.form.input}
+          onChangeText={(text) => formik.setFieldValue("address", text)}
+          value={formik.values.address}
+          error={formik.errors.address}
+        />
+        <TextInput
+          label="Codigo Postal"
+          style={globalStyles.form.input}
+          onChangeText={(text) => formik.setFieldValue("postal_code", text)}
+          value={formik.values.postal_code}
+          error={formik.errors.postal_code}
+        />
+        <TextInput
+          label="Ciudad"
+          style={globalStyles.form.input}
+          onChangeText={(text) => formik.setFieldValue("city", text)}
+          value={formik.values.city}
+          error={formik.errors.city}
+        />
+        <TextInput
+          label="Estado"
+          style={globalStyles.form.input}
+          onChangeText={(text) => formik.setFieldValue("state", text)}
+          value={formik.values.state}
+          error={formik.errors.state}
+        />
+        <TextInput
+          label="Pais"
+          style={globalStyles.form.input}
+          onChangeText={(text) => formik.setFieldValue("country", text)}
+          value={formik.values.country}
+          error={formik.errors.country}
+        />
+        <TextInput
+          label="Telefono"
+          style={globalStyles.form.input}
+          onChangeText={(text) => formik.setFieldValue("phone", text)}
+          value={formik.values.phone}
+          error={formik.errors.phone}
+        />
+
+        <Button
+          mode="contained"
+          style={[globalStyles.form.btnSubmit, styles.btnSubmit]}
+          onPress={formik.handleSubmit}
+          loading={formik.isSubmitting}
+        >
+          Crear direccion
+        </Button>
+      </View>
+    </KeyboardAwareScrollView>
+  );
+}

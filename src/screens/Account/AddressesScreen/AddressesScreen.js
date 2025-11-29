@@ -8,15 +8,17 @@ import {
 import { useState, useCallback } from "react";
 import { IconButton } from "react-native-paper";
 import { size } from "lodash";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { addressCtrl } from "../../../api";
 import { useAuth } from "../../../hooks";
+import { scrensName } from "../../../utils";
 import { AddressList } from "../../../components/Addresses";
 import { styles } from "./AddressesScreen.style";
 
 export function AddressesScreen() {
   const { user } = useAuth();
   const [addresses, setAddresses] = useState([]);
+  const navigation = useNavigation();
 
   const retrieveAddresses = useCallback(async () => {
     if (!user || !user.id) return; // safety check
@@ -40,8 +42,18 @@ export function AddressesScreen() {
     }, [retrieveAddresses])
   );
 
+  const goToAddAddress = () => {
+    navigation.navigate(scrensName.account.addEditAddresses);
+  };
+
   return (
     <ScrollView style={styles.container}>
+      <Pressable onPress={goToAddAddress}>
+        <View style={styles.addAddress}>
+          <Text style={styles.addAdressText}>Añadir una direccion</Text>
+          <IconButton icon="arrow-right" color="#000" size={19} />
+        </View>
+      </Pressable>
       {!addresses ? (
         <ActivityIndicator size="large" style={styles.loading} />
       ) : size(addresses) === 0 ? (

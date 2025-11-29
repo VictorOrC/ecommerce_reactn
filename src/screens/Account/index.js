@@ -1,5 +1,5 @@
 export * from "./AccountScreen";
-export * from "./AddEditAddressesScreen";
+export * from "./AddEditAddressesScreen/AddEditAddressesScreen";
 export * from "./AddressesScreen/AddressesScreen";
 export * from "./ChangeEmailScreen/ChangeEmailScreen";
 export * from "./ChangeNameScreen/ChangeNameScreen";

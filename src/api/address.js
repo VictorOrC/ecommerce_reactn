@@ -36,6 +36,33 @@ async function getAllAddresses(userId) {
   }
 }
 
+async function createAddress(userId, data) {
+  try {
+    const url = `${ENV.API_URL}/${ENV.ENDPOINT.ADDRESSES}`;
+    const params = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        data: {
+          ...data,
+          user: userId,
+        },
+      }),
+    };
+
+    const response = await authFetch(url, params);
+
+    if (!response || !response.ok) throw response;
+
+    return await response.json();
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const addressCtrl = {
   getAll: getAllAddresses,
+  create: createAddress,
 };
