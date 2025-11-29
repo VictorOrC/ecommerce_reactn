@@ -5,12 +5,12 @@ import { Address } from "./Address";
 import { styles } from "./AddressList.styles";
 
 export function AddressList(props) {
-  const { addresses } = props;
-  console.log(addresses);
+  const { addresses, onReload } = props;
+  //console.log(addresses);
   return (
     <View style={styles.container}>
       {map(addresses, (address) => (
-        <Address key={address.id} address={address} />
+        <Address key={address.id} address={address} onReload={onReload} />
       ))}
     </View>
   );

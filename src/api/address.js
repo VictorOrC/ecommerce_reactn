@@ -65,7 +65,6 @@ async function createAddress(userId, data) {
 async function getAddressById(addressId) {
   try {
     const url = `${ENV.API_URL}/${ENV.ENDPOINT.ADDRESSES}/${addressId}`;
-    console.log(url);
 
     const response = await authFetch(url);
 
@@ -100,9 +99,38 @@ async function updateAddress(addressId, data) {
   }
 }
 
+async function deleteAddress(addressId) {
+  try {
+    const url = `${ENV.API_URL}/${ENV.ENDPOINT.ADDRESSES}/${addressId}`;
+    console.log(url);
+
+    const params = {
+      method: "DELETE",
+    };
+
+    const response = await authFetch(url, params);
+
+    // Si no hay respuesta o viene con error, lanzamos excepción
+    if (!response || !response.ok) throw response;
+
+    // 👇 Strapi devuelve 204 cuando borra algo sin body
+    if (response.status === 204) {
+      // No intentes hacer response.json() aquí, no hay body
+      return { ok: true };
+    }
+
+    // Si en algún caso Strapi devuelve datos en el body:
+    const result = await response.json();
+    return { ...result.data };
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const addressCtrl = {
   getAll: getAllAddresses,
   get: getAddressById,
   create: createAddress,
   update: updateAddress,
+  delete: deleteAddress,
 };

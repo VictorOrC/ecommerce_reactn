@@ -1,11 +1,13 @@
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 import { Button } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { styles } from "./Address.styles";
 import { scrensName } from "../../../../utils";
+import { addressCtrl } from "../../../../api";
+import Toast from "react-native-root-toast";
 
 export function Address(props) {
-  const { address } = props;
+  const { address, onReload } = props;
   const navigation = useNavigation();
 
   const goToUpdateAddress = () => {
@@ -14,6 +16,35 @@ export function Address(props) {
       documentId: address.documentId,
     });
   };
+
+  const deleteaddressAlert = () => {
+    Alert.alert(
+      "Eliminar direccion!!",
+      `¿Estas seguro de que quieres eliminar la direccion (${address.title})?`,
+      [
+        {
+          text: "No",
+        },
+        {
+          text: "Si",
+          onPress: deleteAddress,
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+  const deleteAddress = async () => {
+    try {
+      await addressCtrl.delete(address.documentId);
+      onReload();
+    } catch (error) {
+      Toast.show("Error al eliminar la direccion", {
+        position: Toast.positions.CENTER,
+      });
+      console.log("error: ", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{address.title}</Text>
@@ -29,7 +60,9 @@ export function Address(props) {
         <Button mode="contained" onPress={goToUpdateAddress}>
           Editar
         </Button>
-        <Button mode="contained">Eliminar</Button>
+        <Button mode="contained" onPress={deleteaddressAlert}>
+          Eliminar
+        </Button>
       </View>
     </View>
   );

@@ -17,6 +17,7 @@ import { styles } from "./AddressesScreen.style";
 
 export function AddressesScreen() {
   const { user } = useAuth();
+  const [reload, setReload] = useState(false);
   const [addresses, setAddresses] = useState([]);
   const navigation = useNavigation();
 
@@ -26,7 +27,7 @@ export function AddressesScreen() {
     try {
       const response = await addressCtrl.getAll(user.id);
 
-      console.log("API addresses response:", response);
+      //console.log("API addresses response:", response);
 
       // Strapi typically returns: { data: [...] }
       setAddresses(response?.data ?? []);
@@ -39,12 +40,14 @@ export function AddressesScreen() {
   useFocusEffect(
     useCallback(() => {
       retrieveAddresses();
-    }, [retrieveAddresses])
+    }, [retrieveAddresses, reload])
   );
 
   const goToAddAddress = () => {
     navigation.navigate(scrensName.account.addEditAddresses);
   };
+
+  const onReload = () => setReload((prevState) => !prevState);
 
   return (
     <ScrollView style={styles.container}>
@@ -59,7 +62,7 @@ export function AddressesScreen() {
       ) : size(addresses) === 0 ? (
         <Text style={styles.noAddressText}>Crea tu primera direccion</Text>
       ) : (
-        <AddressList addresses={addresses} />
+        <AddressList addresses={addresses} onReload={onReload} />
       )}
     </ScrollView>
   );
