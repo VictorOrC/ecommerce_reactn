@@ -2,6 +2,7 @@ import { useState } from "react";
 import { View, Animated, Keyboard } from "react-native";
 import { Searchbar } from "react-native-paper";
 import { searchHistoryCtrl } from "../../../../api";
+import { useSearch } from "../../../../hooks";
 import { SearchHistory } from "../SearchHistory";
 import { AnimatedIcon, searchAnimation } from "./SearchInput.animation";
 import { styles } from "./SearchInput.styles";
@@ -9,8 +10,7 @@ import { styles } from "./SearchInput.styles";
 export function SearchInput() {
   const [containerHeight, setContainerHeight] = useState(0);
   const [openHistory, setOpenHistory] = useState(false);
-
-  const [searchText, setSearchText] = useState("");
+  const { searchText, setSearchText } = useSearch();
 
   const openCloseHistory = () => setOpenHistory((prevState) => !prevState);
 
@@ -50,7 +50,7 @@ export function SearchInput() {
             autoCapitalize="none"
             onFocus={openSearch}
             value={searchText}
-            onChangeText={(text) => setSearchText(text)}
+            onChangeText={setSearchText}
             onSubmitEditing={onSearch}
           />
         </Animated.View>
