@@ -1,5 +1,5 @@
-import { Searchinput } from "./SearchInput";
+import { SearchInput } from "./SearchInput";
 
 export const Search = {
-  Input: Searchinput,
+  Input: SearchInput,
 };

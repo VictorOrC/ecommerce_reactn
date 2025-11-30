@@ -12,5 +12,6 @@ export const ENV = {
   },
   STORAGE: {
     TOKEN: "token",
+    SEARCH_HISTORY: "search-history",
   },
 };

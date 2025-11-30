@@ -1,10 +1,65 @@
-import { View, Text } from "react-native";
-import React from "react";
+import { useState } from "react";
+import { View, Animated, Keyboard } from "react-native";
+import { Searchbar } from "react-native-paper";
+import { searchHistoryCtrl } from "../../../../api";
+import { SearchHistory } from "../SearchHistory";
+import { AnimatedIcon, searchAnimation } from "./SearchInput.animation";
+import { styles } from "./SearchInput.styles";
 
-export function Searchinput() {
+export function SearchInput() {
+  const [containerHeight, setContainerHeight] = useState(0);
+  const [openHistory, setOpenHistory] = useState(false);
+
+  const [searchText, setSearchText] = useState("");
+
+  const openCloseHistory = () => setOpenHistory((prevState) => !prevState);
+
+  const openSearch = () => {
+    searchAnimation.transition.start();
+    openCloseHistory();
+  };
+
+  const closeSearch = () => {
+    searchAnimation.transitionReset.start();
+    Keyboard.dismiss();
+    openCloseHistory();
+  };
+
+  const onSearch = async () => {
+    await searchHistoryCtrl.update(searchText);
+  };
+
   return (
-    <View>
-      <Text>Searchinput</Text>
+    <View
+      style={styles.container}
+      onLayout={(e) => setContainerHeight(e.nativeEvent.layout.height)}
+    >
+      <View style={styles.containerInput}>
+        <AnimatedIcon
+          name="arrow-left"
+          size={20}
+          style={[styles.backArrow, searchAnimation.arrow]}
+          onPress={closeSearch}
+        />
+        <Animated.View
+          style={[searchAnimation.input, { width: searchAnimation.inputWidth }]}
+        >
+          <Searchbar
+            placeholder="Busca tu producto"
+            style={[styles.searchBar]}
+            autoCapitalize="none"
+            onFocus={openSearch}
+            value={searchText}
+            onChangeText={(text) => setSearchText(text)}
+            onSubmitEditing={onSearch}
+          />
+        </Animated.View>
+      </View>
+      <SearchHistory
+        open={openHistory}
+        height={containerHeight}
+        onSearch={() => console.log("volver a buscar")}
+      />
     </View>
   );
 }
