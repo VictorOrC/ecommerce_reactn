@@ -44,7 +44,25 @@ async function searchProduct(text) {
   }
 }
 
+async function getProductById(productId) {
+  try {
+    const populateFilter = "populate=*";
+    const url = `${ENV.API_URL}/${ENV.ENDPOINT.PRODUCTS}/${productId}?${populateFilter}`;
+
+    const response = await fetch(url);
+
+    if (!response || !response.ok) throw response;
+
+    const result = await response.json();
+
+    return { ...result.data };
+  } catch (error) {
+    throw error;
+  }
+}
+
 export const productCtrl = {
   getLastestPublished,
   search: searchProduct,
+  getById: getProductById,
 };
