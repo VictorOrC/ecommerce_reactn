@@ -10,4 +10,19 @@ export const styles = StyleSheet.create({
     width,
     height,
   },
+  historyItem: {
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderWidth: 0,
+    borderBottomWidth: 0.2,
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  text: {
+    color: "#53005f",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
 });
