@@ -4,7 +4,6 @@ import { styles } from "./Price.styles";
 
 export function Price(props) {
   const { price, discount } = props;
-  console.log(props);
 
   return (
     <View style={styles.container}>
