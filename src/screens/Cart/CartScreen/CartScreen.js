@@ -16,6 +16,7 @@ export function CartScreen() {
   const [products, setProducts] = useState(null);
   const [totalPayment, setTotalPayment] = useState(0);
   const [addresses, setAddresses] = useState(null);
+  const [selectedAddress, setSelectedAddress] = useState(null);
   const { cart } = useCart();
   const { user } = useAuth();
 
@@ -64,8 +65,12 @@ export function CartScreen() {
         <KeyboardAwareScrollView extraScrollHeight={120}>
           <View style={styles.container}>
             <Cart.ProductList products={products} />
-            <Text>Direcciones</Text>
-            <Text>Pago</Text>
+            <Cart.AddressList
+              addresses={addresses}
+              selectedAddress={selectedAddress}
+              setSelectedAddress={setSelectedAddress}
+            />
+            {selectedAddress && <Text>Pago</Text>}
           </View>
         </KeyboardAwareScrollView>
       )}
