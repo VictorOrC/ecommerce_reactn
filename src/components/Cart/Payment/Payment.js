@@ -31,6 +31,7 @@ export function Payment(props) {
           title: item.title,
           price: item.price,
           quantity: item.quantity,
+          image: item.main_image.url,
         }));
 
         // Opcional: simplificar dirección

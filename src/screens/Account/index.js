@@ -5,5 +5,5 @@ export * from "./ChangeEmailScreen/ChangeEmailScreen";
 export * from "./ChangeNameScreen/ChangeNameScreen";
 export * from "./ChangePasswordScreen/ChangePasswordScreen";
 export * from "./ChangeUserName/ChangeUserName";
-export * from "./OrderScreen";
-export * from "./OrdersScreen";
+export * from "./OrderScreen/OrderScreen";
+export * from "./OrdersScreen/OrdersScreen";
