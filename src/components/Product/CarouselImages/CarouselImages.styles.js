@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
   image: {
     width: widthNuevo,
     height: widthNuevo,
-    resizeMode: "cover",
+    resizeMode: "stretch",
     borderRadius: 10,
   },
   dotsContainer: {

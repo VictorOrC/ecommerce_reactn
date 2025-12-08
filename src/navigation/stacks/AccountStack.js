@@ -16,7 +16,18 @@ const Stack = createNativeStackNavigator();
 
 export function AccountStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: "#16222b", // 🔹 color de la barra de arriba
+        },
+        headerTintColor: "#fff", // 🔹 color de texto y flecha de back
+        headerTitleStyle: {
+          fontSize: 18,
+          fontWeight: "600",
+        },
+      }}
+    >
       <Stack.Screen
         name={scrensName.account.account}
         component={AccountScreen}

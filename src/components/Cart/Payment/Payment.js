@@ -58,7 +58,7 @@ export function Payment(props) {
         if (response) {
           await emptyCart();
           navigation.navigate(scrensName.account.root, {
-            screen: scrensName.account.order,
+            screen: scrensName.account.orders,
           });
         } else {
           new Error("Error al realizar el pedido");
