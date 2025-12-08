@@ -1,28 +1,27 @@
 import { ENV } from "../utils";
 
 async function register(email, username, password) {
-  try {
-    const url = `${ENV.API_URL}/${ENV.ENDPOINT.REGISTER}`;
-    const params = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email,
-        username,
-        password,
-      }),
-    };
+  const url = `${ENV.API_URL}/${ENV.ENDPOINT.REGISTER}`;
 
-    const response = await fetch(url, params);
+  const params = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, username, password }),
+  };
 
-    if (response.status !== 200) throw response;
+  const response = await fetch(url, params);
 
-    return await response.json();
-  } catch (error) {
-    throw error;
+  // 👇 SIEMPRE leer el body ANTES de checkear ok
+  const result = await response.json();
+
+  if (!response.ok) {
+    // 🔥 Lanzamos el JSON de error, NO el response
+    throw result;
   }
+
+  return result;
 }
 
 async function login(email, password) {

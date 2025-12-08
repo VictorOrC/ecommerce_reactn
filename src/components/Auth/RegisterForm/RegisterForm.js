@@ -24,16 +24,26 @@ export function RegisterForm(props) {
         await authCtrl.register(email, username, password);
         showLogin();
       } catch (error) {
-        console.log("ERROR REGISTER:", JSON.stringify(error, null, 2));
+        console.log("REGISTER ERROR:", JSON.stringify(error, null, 2));
 
-        const msg =
+        let msg =
           error?.error?.message ||
           error?.message ||
-          "Error al registrar el usuario";
+          "No se pudo completar el registro";
+
+        // Si Strapi manda detalles por campo (en otros casos)
+        if (error?.error?.details?.errors?.length > 0) {
+          msg = error.error.details.errors[0].message;
+        }
+
+        // 🔹 Mensajes personalizados
+        if (msg === "Email or Username are already taken") {
+          msg = "El correo o el nombre de usuario ya están en uso";
+        }
 
         Toast.show(msg, {
-          position: Toast.positions.CENTER,
           duration: 2000,
+          position: Toast.positions.CENTER,
         });
       }
     },
