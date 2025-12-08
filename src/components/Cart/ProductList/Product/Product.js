@@ -60,7 +60,7 @@ export function Product(props) {
             style={styles.btnDelete}
             onPress={onDeleteProduct}
           >
-            Eliminar
+            Borrar
           </Button>
         </View>
       </View>

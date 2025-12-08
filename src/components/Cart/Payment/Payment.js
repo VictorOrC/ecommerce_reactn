@@ -4,7 +4,6 @@ import { useFormik } from "formik";
 import { useNavigation } from "@react-navigation/native";
 import { initialValues, validationSchema } from "./Payment.form";
 import { styles } from "./Payment.styles";
-import { globalStyles } from "../../../styles";
 import { orderCtrl } from "../../../api";
 import { useAuth, useCart } from "../../../hooks";
 import { scrensName } from "../../../utils";
@@ -15,7 +14,6 @@ export function Payment(props) {
   const { user } = useAuth();
   const { emptyCart } = useCart();
   const navigation = useNavigation();
-  //console.log(products);
 
   const formik = useFormik({
     initialValues: initialValues(),
@@ -25,7 +23,6 @@ export function Payment(props) {
       try {
         const idPayment = generatePaymentId();
 
-        // Opcional: simplificar los productos que mandas
         const productsPayload = products.map((item) => ({
           id: item.id,
           title: item.title,
@@ -34,7 +31,6 @@ export function Payment(props) {
           image: item.main_image.url,
         }));
 
-        // Opcional: simplificar dirección
         const addressShipping = {
           id: selectedAddress.id,
           title: selectedAddress.title,
@@ -61,9 +57,10 @@ export function Payment(props) {
             screen: scrensName.account.orders,
           });
         } else {
-          new Error("Error al realizar el pedido");
+          throw new Error("Error al realizar el pedido");
         }
       } catch (error) {
+        console.log("PAYMENT ERROR:", error);
         Toast.show("Error al realizar el pago", {
           duration: 2000,
           position: Toast.positions.CENTER,
@@ -75,64 +72,125 @@ export function Payment(props) {
   function generatePaymentId() {
     const randomPart = Math.random().toString(36).slice(2, 8).toUpperCase();
     const timePart = Date.now().toString(36).toUpperCase();
-    return `PAY-${timePart}-${randomPart}`; // Ej: PAY-MB4K2L-9XQ2FZ
+    return `PAY-${timePart}-${randomPart}`;
   }
+
+  const hasNameError = !!(formik.touched.name && formik.errors.name);
+  const hasNumberError = !!(formik.touched.number && formik.errors.number);
+  const hasMonthError = !!(formik.touched.exp_month && formik.errors.exp_month);
+  const hasYearError = !!(formik.touched.exp_year && formik.errors.exp_year);
+  const hasCvcError = !!(formik.touched.cvc && formik.errors.cvc);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Forma de pago</Text>
+      <View style={styles.card}>
+        <Text style={styles.title}>Forma de pago</Text>
 
-      <TextInput
-        label="Nombre del titular"
-        style={globalStyles.form.input}
-        onChangeText={(text) => formik.setFieldValue("name", text)}
-        value={formik.values.name}
-        error={formik.errors.name}
-      />
-      <TextInput
-        label="Nombre de tarjeta"
-        style={globalStyles.form.input}
-        onChangeText={(text) => formik.setFieldValue("number", text)}
-        value={formik.values.number}
-        error={formik.errors.number}
-      />
+        {/* Titular */}
+        <TextInput
+          label="Nombre del titular"
+          mode="outlined"
+          style={styles.input}
+          outlineStyle={styles.outline}
+          contentStyle={{ fontSize: 16, paddingVertical: 10 }}
+          left={<TextInput.Icon icon="account-outline" />}
+          onChangeText={(text) => formik.setFieldValue("name", text)}
+          onBlur={formik.handleBlur("name")}
+          value={formik.values.name}
+          error={hasNameError}
+        />
+        {hasNameError && (
+          <Text style={styles.errorText}>{formik.errors.name}</Text>
+        )}
 
-      <View style={styles.inputGroup}>
-        <View style={styles.viewMonthYearInputs}>
+        {/* Número de tarjeta */}
+        <TextInput
+          label="Número de tarjeta"
+          mode="outlined"
+          style={styles.input}
+          outlineStyle={styles.outline}
+          contentStyle={{ fontSize: 16, paddingVertical: 10 }}
+          keyboardType="numeric"
+          maxLength={16}
+          left={<TextInput.Icon icon="credit-card-outline" />}
+          onChangeText={(text) => formik.setFieldValue("number", text)}
+          onBlur={formik.handleBlur("number")}
+          value={formik.values.number}
+          error={hasNumberError}
+        />
+        {hasNumberError && (
+          <Text style={styles.errorText}>{formik.errors.number}</Text>
+        )}
+
+        {/* Fecha + CVC */}
+        <View style={styles.inputGroup}>
+          <View style={styles.viewMonthYearInputs}>
+            <TextInput
+              label="Mes"
+              mode="outlined"
+              style={styles.inputDate}
+              outlineStyle={styles.outlineSmall}
+              contentStyle={{ fontSize: 14, paddingVertical: 8 }}
+              keyboardType="numeric"
+              maxLength={2}
+              onChangeText={(text) => formik.setFieldValue("exp_month", text)}
+              onBlur={formik.handleBlur("exp_month")}
+              value={formik.values.exp_month}
+              error={hasMonthError}
+            />
+            <TextInput
+              label="Año"
+              mode="outlined"
+              style={styles.inputDate}
+              outlineStyle={styles.outlineSmall}
+              contentStyle={{ fontSize: 14, paddingVertical: 8 }}
+              keyboardType="numeric"
+              maxLength={2}
+              onChangeText={(text) => formik.setFieldValue("exp_year", text)}
+              onBlur={formik.handleBlur("exp_year")}
+              value={formik.values.exp_year}
+              error={hasYearError}
+            />
+          </View>
+
           <TextInput
-            label="Mes"
-            style={styles.inputDate}
-            onChangeText={(text) => formik.setFieldValue("exp_month", text)}
-            value={formik.values.exp_month}
-            error={formik.errors.exp_month}
-          />
-          <TextInput
-            label="Año"
-            style={styles.inputDate}
-            onChangeText={(text) => formik.setFieldValue("exp_year", text)}
-            value={formik.values.exp_year}
-            error={formik.errors.exp_year}
+            label="CVV/CVC"
+            mode="outlined"
+            style={styles.inputCvc}
+            outlineStyle={styles.outlineSmall}
+            contentStyle={{ fontSize: 14, paddingVertical: 8 }}
+            keyboardType="numeric"
+            maxLength={3}
+            left={<TextInput.Icon icon="shield-lock-outline" />}
+            onChangeText={(text) => formik.setFieldValue("cvc", text)}
+            onBlur={formik.handleBlur("cvc")}
+            value={formik.values.cvc}
+            error={hasCvcError}
           />
         </View>
 
-        <TextInput
-          label="CVV/CVC"
-          style={styles.inputCvc}
-          onChangeText={(text) => formik.setFieldValue("cvc", text)}
-          value={formik.values.cvc}
-          error={formik.errors.cvc}
-        />
-      </View>
+        {hasMonthError && (
+          <Text style={styles.errorText}>{formik.errors.exp_month}</Text>
+        )}
+        {hasYearError && (
+          <Text style={styles.errorText}>{formik.errors.exp_year}</Text>
+        )}
+        {hasCvcError && (
+          <Text style={styles.errorText}>{formik.errors.cvc}</Text>
+        )}
 
-      <Button
-        mode="contained"
-        contentStyle={styles.btnContent}
-        labelStyle={styles.btnText}
-        onPress={formik.handleSubmit}
-        loading={formik.isSubmitting}
-      >
-        Pagar {totalPayment && `($${totalPayment.toFixed(2)})`}
-      </Button>
+        {/* Botón pagar */}
+        <Button
+          style={styles.btn}
+          mode="contained"
+          contentStyle={styles.btnContent}
+          labelStyle={styles.btnText}
+          onPress={formik.handleSubmit}
+          loading={formik.isSubmitting}
+        >
+          Pagar {totalPayment && `($${totalPayment.toFixed(2)})`}
+        </Button>
+      </View>
     </View>
   );
 }

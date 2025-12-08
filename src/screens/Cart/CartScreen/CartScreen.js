@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
-import { View, Text } from "react-native";
-import { size, map } from "lodash";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { View, Platform, KeyboardAvoidingView, ScrollView } from "react-native";
+import { size } from "lodash";
 import { productCtrl, addressCtrl } from "../../../api";
 import { useCart, useAuth } from "../../../hooks";
-import { CartLayout } from "../../../layouts/CartLayout";
-import { fn } from "../../../utils";
-import { LoadingScreen } from "../../../components/Shared";
-import { Cart } from "../../../components/Cart";
-import { styles } from "./CartScreen.styles";
 import { Layout } from "../../../layouts";
-import { Search } from "../../../components/Shared";
+import { Cart } from "../../../components/Cart";
+import { LoadingScreen, Search } from "../../../components/Shared";
+import { fn } from "../../../utils";
+import { styles } from "./CartScreen.styles";
 
 export function CartScreen() {
   const [products, setProducts] = useState(null);
@@ -19,8 +16,6 @@ export function CartScreen() {
   const [selectedAddress, setSelectedAddress] = useState(null);
   const { cart } = useCart();
   const { user } = useAuth();
-
-  //console.log(addresses);
 
   useEffect(() => {
     getProducts();
@@ -44,7 +39,6 @@ export function CartScreen() {
 
     setProducts(productsTemp);
     setTotalPayment(totalPaymenTemp);
-    // console.log(productsTemp[0]);
   };
 
   const loadAddresses = async () => {
@@ -53,33 +47,44 @@ export function CartScreen() {
   };
 
   return (
-    <Layout.Cart>
-      {!products ? (
-        <LoadingScreen text="Cargando carrito" />
-      ) : size(products) === 0 ? (
-        <>
-          <Search.Input />
-          <Cart.Empty />
-        </>
-      ) : (
-        <KeyboardAwareScrollView extraScrollHeight={120}>
-          <View style={styles.container}>
-            <Cart.ProductList products={products} />
-            <Cart.AddressList
-              addresses={addresses}
-              selectedAddress={selectedAddress}
-              setSelectedAddress={setSelectedAddress}
-            />
-            {selectedAddress && (
-              <Cart.Payment
-                totalPayment={totalPayment}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0} // súbelo a 100/120 si hace falta
+    >
+      <Layout.Cart>
+        {!products ? (
+          <LoadingScreen text="Cargando carrito" />
+        ) : size(products) === 0 ? (
+          <>
+            <Search.Input />
+            <Cart.Empty />
+          </>
+        ) : (
+          <ScrollView
+            contentContainerStyle={styles.scrollContent}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.container}>
+              <Cart.ProductList products={products} />
+
+              <Cart.AddressList
+                addresses={addresses}
                 selectedAddress={selectedAddress}
-                products={products}
+                setSelectedAddress={setSelectedAddress}
               />
-            )}
-          </View>
-        </KeyboardAwareScrollView>
-      )}
-    </Layout.Cart>
+
+              {selectedAddress && (
+                <Cart.Payment
+                  totalPayment={totalPayment}
+                  selectedAddress={selectedAddress}
+                  products={products}
+                />
+              )}
+            </View>
+          </ScrollView>
+        )}
+      </Layout.Cart>
+    </KeyboardAvoidingView>
   );
 }
