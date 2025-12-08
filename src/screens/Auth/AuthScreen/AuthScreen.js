@@ -1,10 +1,10 @@
 import { useState } from "react";
 import {
   View,
-  Text,
   Image,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
 } from "react-native";
 import { LoginForm, RegisterForm } from "../../../components/Auth";
 import logo from "../../../../assets/logo.png";
@@ -16,17 +16,23 @@ export function AuthScreen() {
   const onShowLoginRegister = () => setShowLogin((prevState) => !prevState);
 
   return (
-    <View style={styles.container}>
-      <Image source={logo} style={styles.logo} />
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <KeyboardAvoidingView
+      style={{ flex: 1 }} // 🔥 MUY IMPORTANTE
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 80 : 0} // ajusta si hace falta
+    >
+      <ScrollView
+        contentContainerStyle={styles.container}
+        keyboardShouldPersistTaps="handled"
       >
+        <Image source={logo} style={styles.logo} />
+
         {showLogin ? (
           <LoginForm showRegister={onShowLoginRegister} />
         ) : (
           <RegisterForm showLogin={onShowLoginRegister} />
         )}
-      </KeyboardAvoidingView>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }

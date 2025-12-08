@@ -1,15 +1,19 @@
+// AuthScreen.styles.js
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1, // 👈 importante con ScrollView
+    alignItems: "center",
     justifyContent: "center",
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 24,
+    backgroundColor: "#fff",
   },
   logo: {
-    width: "100%",
-    height: 130,
+    width: 140,
+    height: 140,
     resizeMode: "contain",
-    marginBottom: 20,
+    marginBottom: 16,
   },
 });
