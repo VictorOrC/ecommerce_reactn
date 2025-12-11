@@ -1,21 +1,19 @@
 import { useState, useEffect } from "react";
-import { View, Text } from "react-native";
-import { forEach } from "lodash";
 import { productCtrl } from "../../api";
 import { Layout } from "../../layouts";
-import { map } from "lodash";
 import { LoadingScreen, Separator } from "../../components/Shared";
 import { Product } from "../../components/Product";
+import { forEach } from "lodash";
 
 export function ProductScreen(props) {
   const {
     route: { params },
   } = props;
   const productId = params.productId;
-  //console.log(props);
+
   const [product, setProduct] = useState(null);
   const [images, setImages] = useState([]);
-  const [characteristics, setCharacteristics] = useState([]);
+  const [characteristics, setCharacteristics] = useState(""); // 👈 string
 
   useEffect(() => {
     getProduct();
@@ -24,6 +22,10 @@ export function ProductScreen(props) {
   const getProduct = async () => {
     try {
       const response = await productCtrl.getById(productId);
+
+      console.log("🔥 PRODUCTO COMPLETO DESDE STRAPI:");
+      console.log(JSON.stringify(response, null, 2));
+
       setProduct(response);
 
       // --- IMÁGENES ---
@@ -36,19 +38,55 @@ export function ProductScreen(props) {
       });
       setImages(arrayImages);
 
-      // --- CARACTERÍSTICAS ---
-      const chars =
-        response.characteristics
-          ?.flatMap(
-            (block) => block.children?.map((child) => child.text.trim()) ?? []
-          )
-          .filter((t) => t.length > 0) ?? [];
+      // --- CARACTERÍSTICAS (rich-text → markdown) ---
+      const rawChars = response.characteristics;
+      console.log("🔥 RAW characteristics:", rawChars);
 
-      setCharacteristics(chars);
+      const charsMarkdown = characteristicsToMarkdown(rawChars);
+      console.log("🔥 Markdown generado:\n", charsMarkdown);
+
+      setCharacteristics(charsMarkdown);
     } catch (error) {
-      console.log(error);
+      console.log("❌ ERROR EN getProduct:", error);
     }
   };
+
+  // 🔧 Convierte los bloques rich-text de Strapi a un string Markdown
+  function characteristicsToMarkdown(blocks = []) {
+    if (!Array.isArray(blocks)) return "";
+
+    const parts = blocks
+      .map((block) => {
+        // PÁRRAFOS
+        if (block.type === "paragraph") {
+          const text = (block.children || [])
+            .map((child) => child.text || "")
+            .join("");
+          return text.trim();
+        }
+
+        // LISTAS SIN ORDEN (unordered)
+        if (block.type === "list" && block.format === "unordered") {
+          const items =
+            block.children?.map((listItem) => {
+              const line = (listItem.children || [])
+                .map((child) => child.text || "")
+                .join("")
+                .trim();
+
+              return line ? `- ${line}` : "";
+            }) || [];
+
+          return items.filter(Boolean).join("\n");
+        }
+
+        return "";
+      })
+      .filter((t) => t && t.length > 0);
+
+    // Separamos párrafos y listas con una línea en blanco
+    return parts.join("\n\n");
+  }
 
   return (
     <>

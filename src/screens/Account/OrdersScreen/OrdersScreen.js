@@ -39,7 +39,6 @@ export function OrdersScreen(props) {
           <Text style={styles.noOrders}>No tienes pedidos</Text>
         ) : (
           <>
-            <Text style={styles.title}>Mis pedidos</Text>
             <OrderList orders={orders} />
           </>
         )}
