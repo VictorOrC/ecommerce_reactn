@@ -7,7 +7,7 @@ export function ProductList(props) {
   const { products } = props;
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.title}>Productos:</Text>
 
       {map(products, (product) => (

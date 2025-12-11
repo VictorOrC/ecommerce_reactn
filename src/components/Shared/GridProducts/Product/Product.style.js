@@ -2,20 +2,30 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
-    width: "50%",
-    padding: 3,
+    width: "48%",
+    paddingVertical: 6,
   },
   product: {
-    backgroundColor: "#fff",
-    borderRadius: 6,
+    backgroundColor: "#ffffff",
+    borderRadius: 14,
     padding: 10,
-  },
-  name: {
-    marginTop: 15,
-    fontSize: 18,
+    shadowColor: "#000",
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 8,
+    elevation: 4,
+    overflow: "hidden",
   },
   image: {
+    width: "100%",
     height: 150,
-    resizeMode: "contain",
+    borderRadius: 12,
+    marginBottom: 8,
+  },
+  name: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#111827",
+    marginTop: 4,
   },
 });

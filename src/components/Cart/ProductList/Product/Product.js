@@ -1,7 +1,7 @@
+// src/components/Cart/ProductList/Product/Product.js
 import { View, Text, Image, TextInput } from "react-native";
 import { Button, IconButton } from "react-native-paper";
-import { ENV } from "../../../../utils";
-import { fn } from "../../../../utils";
+import { ENV, fn } from "../../../../utils";
 import { useCart } from "../../../../hooks";
 import { styles } from "./Product.styles";
 
@@ -23,7 +23,7 @@ export function Product(props) {
 
       <View style={styles.infoContainer}>
         <View>
-          <Text style={styles.title} numberOfLines={3} ellipsizeMode="tail">
+          <Text style={styles.title} numberOfLines={2} ellipsizeMode="tail">
             {product.title}
           </Text>
           <View style={styles.prices}>
@@ -36,28 +36,32 @@ export function Product(props) {
         <View style={styles.actions}>
           <View style={styles.selectQuantity}>
             <IconButton
-              icon="plus"
+              icon="minus"
               iconColor="#fff"
-              size={19}
+              size={18}
               style={styles.btnQuantity}
-              onPress={onIncreaseProduct}
+              onPress={onDecreaseProduct}
             />
             <TextInput
               value={product.quantity.toString()}
               style={styles.inputQuantity}
+              editable={false}
             />
             <IconButton
-              icon="minus"
+              icon="plus"
               iconColor="#fff"
-              size={19}
+              size={18}
               style={styles.btnQuantity}
-              onPress={onDecreaseProduct}
+              onPress={onIncreaseProduct}
             />
           </View>
 
           <Button
             mode="contained"
             style={styles.btnDelete}
+            contentStyle={styles.btnDeleteContent}
+            labelStyle={styles.btnDeleteLabel}
+            buttonColor="#ef4444"
             onPress={onDeleteProduct}
           >
             Borrar

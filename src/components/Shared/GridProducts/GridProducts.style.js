@@ -2,19 +2,18 @@ import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
-    padding: 10,
-    marginTop: 20,
+    paddingHorizontal: 16,
+    paddingTop: 16,
   },
   title: {
-    fontWeight: "bold",
+    fontWeight: "600",
     fontSize: 22,
-    marginBottom: 10,
+    marginBottom: 12,
+    color: "#0f172a",
   },
   gridContainer: {
-    flex: 1,
     flexDirection: "row",
     flexWrap: "wrap",
-    alignItems: "flex-start",
-    margin: -3,
+    justifyContent: "space-between", // separa mejor las cards
   },
 });

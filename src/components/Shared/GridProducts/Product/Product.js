@@ -22,6 +22,7 @@ export function Product(props) {
           <Image
             source={{ uri: `${ENV.URL}${mainImage}` }}
             style={styles.image}
+            resizeMode="stretch"
           />
           <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">
             {product.title}
